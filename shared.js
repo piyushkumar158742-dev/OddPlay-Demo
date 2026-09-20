@@ -108,7 +108,7 @@
   });
 
   /* ============ Background music (persists across pages) ============ */
-  var bgMusic = new Audio('The_Uncharted_Perimeter.mp3');
+  var bgMusic = new Audio('Sunday_Morning_Level_Up.mp3');
   bgMusic.loop = true;
   bgMusic.volume = 0.5;
 
