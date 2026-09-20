@@ -276,6 +276,16 @@ input[type="text"]::placeholder { color: #4b5563; }
   }
   .game-nav-btn svg { pointer-events: none; }
 }
+
+/* Desktop navigation is always visible so game switching never depends on a hidden hover target. */
+@media (min-width: 992px) {
+  .game-nav,
+  .game-nav.desktop-visible {
+    opacity: 1 !important;
+    transform: translateX(-50%) !important;
+    pointer-events: auto !important;
+  }
+}
 </style>
 </head>
 <body class="pt-[90px] pb-16 antialiased" data-game-index="1">
