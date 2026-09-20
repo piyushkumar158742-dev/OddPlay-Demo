@@ -289,10 +289,11 @@
 <script>
 (function(){
   var reduceMotion = document.documentElement.classList.contains('no-motion');
-  var daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
-  var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
   var todayDate = new Date();
+  var currentYear = todayDate.getFullYear();
+  var isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+  var daysInMonth = [31,isLeapYear ? 29 : 28,31,30,31,30,31,31,30,31,30,31];
+  var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   var REAL_TODAY_MONTH = todayDate.getMonth();
   var REAL_TODAY_DATE = todayDate.getDate();
   var currentMonthIndex = REAL_TODAY_MONTH;
