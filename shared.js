@@ -108,58 +108,75 @@
   });
 
   /* ============ Background music (persists across pages) ============ */
-  var bgMusic = new Audio('./Sunday_Morning_Level_Up.mp3?v=2');
+  var bgMusic = new Audio('./Sunday_Morning_Level_Up.mp3?v=3');
   bgMusic.loop = true;
   bgMusic.volume = 0.5;
   bgMusic.preload = 'auto';
   bgMusic.setAttribute('playsinline', '');
+
+  var savedMusicTime = parseFloat(sessionStorage.getItem('arcadeMusicTime'));
+  var musicPositionRestored = isNaN(savedMusicTime);
 
   window.__arcadeSoundOn = function(){
     var v = localStorage.getItem('arcadeSoundOn');
     return v === null ? true : v === '1';
   };
 
+  function restoreMusicPosition(){
+    if(musicPositionRestored || isNaN(savedMusicTime)) return;
+    var duration = bgMusic.duration;
+    if(!isFinite(duration) || duration <= 0) return;
+    bgMusic.currentTime = Math.min(Math.max(savedMusicTime, 0), Math.max(duration - 0.05, 0));
+    musicPositionRestored = true;
+  }
+
   function tryPlayMusic(){
     if(!window.__arcadeSoundOn()) return;
+    restoreMusicPosition();
     var playPromise = bgMusic.play();
     if(playPromise && playPromise.catch) playPromise.catch(function(){});
   }
 
   function applyMusicState(){
     if(window.__arcadeSoundOn()){
+      restoreMusicPosition();
       tryPlayMusic();
     } else {
       bgMusic.pause();
     }
   }
 
-  /* Browsers often block autoplay. Any real user interaction while Sound is
-     enabled is treated as permission to start/resume the soundtrack. */
+  bgMusic.addEventListener('loadedmetadata', function(){
+    restoreMusicPosition();
+    if(window.__arcadeSoundOn()) tryPlayMusic();
+  });
+
+  bgMusic.addEventListener('canplay', function(){
+    restoreMusicPosition();
+  });
+
+  /* Browsers may block autoplay. Once the player interacts, resume the
+     soundtrack from the exact position reached on the previous game. */
   ['pointerdown','touchstart','click','keydown'].forEach(function(eventName){
     document.addEventListener(eventName, function(){ tryPlayMusic(); }, {passive:true});
   });
 
-  var savedMusicTime = parseFloat(sessionStorage.getItem('arcadeMusicTime'));
-  if(!isNaN(savedMusicTime)){
-    bgMusic.addEventListener('loadedmetadata', function(){
-      bgMusic.currentTime = savedMusicTime;
-      applyMusicState();
-    }, {once:true});
-  } else {
-    applyMusicState();
+  function saveMusicPosition(){
+    if(isFinite(bgMusic.currentTime) && bgMusic.currentTime >= 0){
+      sessionStorage.setItem('arcadeMusicTime', bgMusic.currentTime.toString());
+    }
   }
 
-  window.__arcadeSetSoundOn = function(on){
-    localStorage.setItem('arcadeSoundOn', on ? '1' : '0');
-    applyMusicState();
-  };
-
-  setInterval(function(){
-    sessionStorage.setItem('arcadeMusicTime', bgMusic.currentTime);
-  }, 1000);
+  var musicSaveTimer = setInterval(saveMusicPosition, 500);
   window.addEventListener('pagehide', function(){
-    sessionStorage.setItem('arcadeMusicTime', bgMusic.currentTime);
+    clearInterval(musicSaveTimer);
+    saveMusicPosition();
   });
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden') saveMusicPosition();
+  });
+
+  applyMusicState();
 
   /* ============ Settings panel ============ */
   var settingsBtn = document.getElementById('settings-btn');
@@ -199,7 +216,7 @@
 
   /* ============ Game ecosystem registry ============ */
   var FALLBACK_GAMES = [
-    { id:"cosmic-calendar", name:"Cosmic Calendar", url:"index.html" },
+    { id:"cosmic-calendar", name:"Cosmic Calendar", url:"game1.html" },
     { id:"block-market", name:"Block Market", url:"game2.html" },
     { id:"stop-at-5000", name:"Stop at 5.000", url:"game3.html" },
     { id:"a-is-z-typer", name:"A is Z Typer", url:"game4.html" },
@@ -327,6 +344,43 @@
       sessionStorage.removeItem('navExpanded');
       navBar.classList.add('mobile-expanded');
       resetCollapseTimeout();
+    }
+  }
+
+  /* ============ DVD fairness normalization ============ */
+  /* Smaller screens have less travel distance, so normalize the effective
+     simulation rate to keep wall/corner opportunities comparable. */
+  if(/(?:^|\\/)game5\\.html$/i.test(window.location.pathname)){
+    var dvdStage = document.getElementById('dvd-stage');
+    var dvdLogo = document.getElementById('dvd-logo');
+    if(dvdStage && dvdLogo && window.requestAnimationFrame){
+      var referenceTravelW = 1216;
+      var referenceTravelH = 684;
+      var dvdSpeedScale = 1;
+
+      function recalculateDvdFairness(){
+        var travelW = Math.max(dvdStage.clientWidth - dvdLogo.offsetWidth, 1);
+        var travelH = Math.max(dvdStage.clientHeight - dvdLogo.offsetHeight, 1);
+        var referenceCollisionRate = (1 / referenceTravelW) + (1 / referenceTravelH);
+        var currentCollisionRate = (1 / travelW) + (1 / travelH);
+        dvdSpeedScale = Math.max(0.35, Math.min(1, referenceCollisionRate / currentCollisionRate));
+      }
+
+      recalculateDvdFairness();
+
+      var nativeRequestAnimationFrame = window.requestAnimationFrame.bind(window);
+      var virtualDvdTime = performance.now();
+      var previousDvdRealTime = virtualDvdTime;
+      window.requestAnimationFrame = function(callback){
+        return nativeRequestAnimationFrame(function(realNow){
+          var realDelta = Math.min(Math.max(realNow - previousDvdRealTime, 0), 50);
+          virtualDvdTime += realDelta * dvdSpeedScale;
+          previousDvdRealTime = realNow;
+          callback(virtualDvdTime);
+        });
+      };
+
+      window.addEventListener('resize', recalculateDvdFairness, {passive:true});
     }
   }
 
