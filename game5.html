@@ -571,6 +571,7 @@
   let logoW = 0, logoH = 0, stageW = 0, stageH = 0;
   let score = 0, corners = 0;
   let lastTime = 0;
+  let fairnessScale = 1;
 
   const upgrades = {
     speed:      { level: 0, baseCost: 15,  growth: 1.15 },
@@ -590,6 +591,16 @@
     stageH = stageEl.clientHeight;
     logoW = baseLogoEl.offsetWidth;
     logoH = baseLogoEl.offsetHeight;
+
+    /* Small screens have a much shorter travel path to the walls. Slow the
+       whole simulation proportionally so corner-hit opportunities stay fair. */
+    const travelW = Math.max(stageW - logoW, 1);
+    const travelH = Math.max(stageH - logoH, 1);
+    const referenceTravelW = 1216;
+    const referenceTravelH = 684;
+    const referenceCollisionRate = (1 / referenceTravelW) + (1 / referenceTravelH);
+    const currentCollisionRate = (1 / travelW) + (1 / travelH);
+    fairnessScale = Math.max(0.35, Math.min(1, referenceCollisionRate / currentCollisionRate));
   }
 
   function pickNewColor(ball) {
@@ -643,7 +654,7 @@
   function tick(now) {
     if (!lastTime) lastTime = now;
     let dt = (now - lastTime) / 1000;
-    dt = Math.min(dt, 0.05); 
+    dt = Math.min(dt, 0.05) * fairnessScale; 
     lastTime = now;
 
     balls.forEach(ball => {
