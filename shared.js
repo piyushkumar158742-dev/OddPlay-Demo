@@ -107,6 +107,63 @@
     }, 200);
   });
 
+  /* ============ Shared arcade controls ============ */
+  function ensureSharedControls(){
+    var body = document.body;
+    if(!body) return;
+
+    if(!document.getElementById('settings-btn')){
+      var settingsBtn = document.createElement('button');
+      settingsBtn.id = 'settings-btn';
+      settingsBtn.className = 'settings-btn';
+      settingsBtn.type = 'button';
+      settingsBtn.setAttribute('aria-label','Settings');
+      settingsBtn.setAttribute('aria-haspopup','true');
+      settingsBtn.setAttribute('aria-expanded','false');
+      settingsBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="5" r="1.6" fill="currentColor"></circle><circle cx="12" cy="12" r="1.6" fill="currentColor"></circle><circle cx="12" cy="19" r="1.6" fill="currentColor"></circle></svg>';
+      body.appendChild(settingsBtn);
+    }
+
+    if(!document.getElementById('settings-panel')){
+      var panel = document.createElement('div');
+      panel.id = 'settings-panel';
+      panel.className = 'settings-panel';
+      panel.setAttribute('role','dialog');
+      panel.setAttribute('aria-label','Settings');
+      panel.innerHTML = '<h2>Settings</h2><div class="settings-row"><span>Sound</span><button class="settings-toggle" id="sound-toggle" role="switch" aria-checked="true" type="button" aria-label="Toggle sound"></button></div>';
+      body.appendChild(panel);
+    }
+
+    if(!document.getElementById('game-nav')){
+      var nav = document.createElement('nav');
+      nav.id = 'game-nav';
+      nav.className = 'game-nav';
+      nav.setAttribute('aria-label','Game navigation');
+      nav.innerHTML =
+        '<a class="game-nav-btn" id="back-game-btn" href="game5.html" aria-label="Previous game">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 5 7.5 12l9 7Z"></path></svg>'+
+        '</a>'+
+        '<button class="game-nav-btn random-btn" id="random-game-btn" type="button" aria-label="Random game">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"></circle></svg>'+
+        '</button>'+
+        '<a class="game-nav-btn" id="next-game-btn" href="game2.html" aria-label="Next game">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 5l9 7-9 7Z"></path></svg>'+
+        '</a>';
+      body.appendChild(nav);
+    }
+
+    var idx = parseInt(body.getAttribute('data-game-index'),10);
+    if(!isFinite(idx)) idx=0;
+    var previous = ['game5.html','game1.html','game2.html','game3.html','game4.html'][idx] || 'game5.html';
+    var next = ['game2.html','game3.html','game4.html','game5.html','game1.html'][idx] || 'game1.html';
+    var back = document.getElementById('back-game-btn');
+    var nextBtn = document.getElementById('next-game-btn');
+    if(back) back.href=previous;
+    if(nextBtn) nextBtn.href=next;
+  }
+
+  ensureSharedControls();
+
   /* ============ Background music (persists across pages) ============ */
   var bgMusic = new Audio('./Sunday_Morning_Level_Up.mp3?v=3');
   bgMusic.loop = true;
