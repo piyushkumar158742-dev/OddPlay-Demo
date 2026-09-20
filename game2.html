@@ -116,79 +116,6 @@ input[type="text"]::placeholder { color: #4b5563; }
 
 /* ============ SETTINGS BUTTON & PANEL ============ */
 /* ============ GAME NAV — bottom bar ============ */
-.game-nav {
-  position: fixed; left: 50%; bottom:16px;
-  transform: translateX(-50%);
-  display: flex; align-items: center; gap: 4px;
-  background: rgba(10,10,12,0.96);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border); padding: 6px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.55); z-index: 60;
-  border-radius: 50px;
-}
-.game-nav-btn {
-  background: transparent; border: none; color: #9aa1ad;
-  width: 44px; height: 44px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background .25s ease, color .25s ease;
-}
-.game-nav-btn svg { width: 18px; height: 18px; }
-.game-nav-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
-.game-nav-btn:focus-visible { outline: 2px solid var(--emerald); outline-offset: 2px; }
-.game-nav-btn.random-btn { color: #f0c26e; }
-.game-nav-btn.random-btn:hover { background: rgba(240,194,110,0.14); }
-
-@media (min-width: 992px) {
-  .game-nav {
-    opacity: 0;
-    transform: translate(-50%, 150%);
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    pointer-events: none;
-  }
-  .game-nav.desktop-visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-    pointer-events: auto;
-  }
-}
-
-@media (max-width: 991px) {
-  .game-nav {
-    left: auto; right: 20px; transform: none;
-    width: 56px; height: 56px; padding: 0;
-    background: transparent; border: none; box-shadow: none;
-    backdrop-filter: none; -webkit-backdrop-filter: none;
-    cursor: pointer;
-  }
-  .game-nav::before {
-    content: '';
-    position: absolute; inset: 0; border-radius: 16px;
-    background: rgba(10,10,12,0.96);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%2334d97a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3' y='3' width='18' height='18' rx='4'%3E%3C/rect%3E%3Ccircle cx='8' cy='8' r='1.3' fill='%2334d97a' stroke='none'%3E%3C/circle%3E%3Ccircle cx='16' cy='8' r='1.3' fill='%2334d97a' stroke='none'%3E%3C/circle%3E%3Ccircle cx='12' cy='12' r='1.3' fill='%2334d97a' stroke='none'%3E%3C/circle%3E%3Ccircle cx='8' cy='16' r='1.3' fill='%2334d97a' stroke='none'%3E%3C/circle%3E%3Ccircle cx='16' cy='16' r='1.3' fill='%2334d97a' stroke='none'%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: center; background-size: 22px 22px;
-    transition: opacity 0.25s ease;
-  }
-  .game-nav.mobile-expanded::before { opacity: 0; }
-  .game-nav-btn {
-    position: absolute; right: 0; bottom: 62px;
-    width: 52px; height: 52px; border-radius: 16px;
-    background: rgba(10,10,12,0.96);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-    opacity: 0; transform: translateY(14px) scale(0.85); pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.32s cubic-bezier(0.2,0.8,0.2,1);
-  }
-  .game-nav-btn:nth-child(1){ bottom: 62px;  transition-delay: 0s; }
-  .game-nav-btn:nth-child(2){ bottom: 124px; transition-delay: 0.04s; }
-  .game-nav-btn:nth-child(3){ bottom: 186px; transition-delay: 0.08s; }
-  .game-nav.mobile-expanded .game-nav-btn {
-    opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
-  }
-}
 </style>
 <link rel="stylesheet" href="shared.css">
 </head>
@@ -285,28 +212,7 @@ input[type="text"]::placeholder { color: #4b5563; }
   </div>
 </div>
 
-<nav class="game-nav" id="game-nav" aria-label="Game navigation" tabindex="0">
-    <a class="game-nav-btn" href="game1.html" aria-label="Previous game">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M16.5 5 7.5 12l9 7Z"></path>
-      </svg>
-    </a>
-    <button class="game-nav-btn random-btn" id="random-game-btn" aria-label="Random game" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-        <circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"></circle>
-        <circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"></circle>
-        <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"></circle>
-        <circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"></circle>
-        <circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"></circle>
-      </svg>
-    </button>
-    <a class="game-nav-btn" href="game3.html" aria-label="Next game">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M7.5 5l9 7-9 7Z"></path>
-      </svg>
-    </a>
-  </nav>
+
 
 <script>
 // ==========================================
