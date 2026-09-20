@@ -821,6 +821,11 @@
     }
   }
 
+  // Initialize the first round and size the on-screen keyboard before input begins.
+  resetGame();
+  fitKeyboardDock();
+  startNextWord();
+
   // ---- Physical keyboard ----
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Backspace' || e.key === ' ') {
