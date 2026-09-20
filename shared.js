@@ -225,20 +225,16 @@
   var GAMES = FALLBACK_GAMES.slice();
   var currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10) || 0;
 
-  /* ============ Random game entry ============ */
-  /* GitHub Pages starts the project at the site root. Pick immediately from
-     the local fallback registry so the entry decision never waits on a fetch. */
-  var siteRootPath = new URL('.', window.location.href).pathname.replace(/\/+$/, '');
-  var currentPath = window.location.pathname.replace(/\/+$/, '');
-  var isSiteRoot = currentPath === siteRootPath && !window.location.search;
-  if(isSiteRoot){
-    var liveGames = FALLBACK_GAMES.slice();
-    var selectedEntry = liveGames[Math.floor(Math.random() * liveGames.length)];
-    if(selectedEntry && selectedEntry.url && selectedEntry.url !== 'index.html'){
-      window.location.replace(selectedEntry.url);
-      return;
-    }
-  }
+  /* ============ Game ecosystem registry ============ */
+  var FALLBACK_GAMES = [
+    { id:"cosmic-calendar", name:"Cosmic Calendar", url:"game1.html" },
+    { id:"block-market", name:"Block Market", url:"game2.html" },
+    { id:"stop-at-5000", name:"Stop at 5.000", url:"game3.html" },
+    { id:"a-is-z-typer", name:"A is Z Typer", url:"game4.html" },
+    { id:"dvd-game", name:"DVD Game", url:"game5.html" }
+  ];
+  var GAMES = FALLBACK_GAMES.slice();
+  var currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10) || 0;
 
   function isValidGameRegistry(games){
     return Array.isArray(games) && games.length > 0 && games.every(function(game){
@@ -263,20 +259,9 @@
       return GAMES;
     });
 
-  function navigateToGame(idx){
-    idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
-    if(idx === currentGameIndex) return;
-    if(window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
-    window.location.assign(GAMES[idx].url);
-  }
-
   function loadGame(idx){
-    /* Navigation must never wait for games.json. The fallback registry is
-       complete and available immediately; a successful fetch only refreshes
-       the registry for later navigation. */
     idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
     if(idx === currentGameIndex) return;
-    if(window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
     window.location.assign(GAMES[idx].url);
   }
 
@@ -284,7 +269,7 @@
     var el = document.getElementById(id);
     if(el){ el.addEventListener('click', handler); }
   }
-  wireNavButton('first-game-btn', function(){ loadGame(0); });
+
   wireNavButton('back-game-btn', function(){ loadGame(currentGameIndex-1); });
   wireNavButton('random-game-btn', function(e){
     if(e) e.preventDefault();
@@ -293,102 +278,18 @@
     loadGame(idx);
   });
   wireNavButton('next-game-btn', function(){ loadGame(currentGameIndex+1); });
-  wireNavButton('last-game-btn', function(){
-    gamesReady.then(function(){ loadGame(GAMES.length-1); });
-  });
+  wireNavButton('first-game-btn', function(){ loadGame(0); });
+  wireNavButton('last-game-btn', function(){ loadGame(GAMES.length-1); });
 
-  /* ============ Nav Bar Visibility & Expand Logic ============ */
+  /* ============ Nav Bar Visibility ============ */
   var navBar = document.querySelector('.game-nav');
-  if (navBar) {
-    document.addEventListener('mousemove', function(e) {
-      if (window.innerWidth >= 992) {
+  if(navBar){
+    document.addEventListener('mousemove', function(e){
+      if(window.innerWidth >= 992){
         var revealZone = Math.max(140, window.innerHeight * 0.18);
-        if (window.innerHeight - e.clientY < revealZone) {
-          navBar.classList.add('desktop-visible');
-        } else {
-          navBar.classList.remove('desktop-visible');
-        }
+        navBar.classList.toggle('desktop-visible', window.innerHeight - e.clientY < revealZone);
       }
     });
-
-    var collapseTimeout;
-    
-    navBar.addEventListener('click', function(e) {
-      if (window.innerWidth < 992) {
-        if (!navBar.classList.contains('mobile-expanded')) {
-          e.preventDefault();
-          navBar.classList.add('mobile-expanded');
-          resetCollapseTimeout();
-        }
-      }
-    });
-
-    document.addEventListener('click', function(e){
-      if (window.innerWidth < 992 && navBar.classList.contains('mobile-expanded')) {
-         if (!navBar.contains(e.target)) {
-           navBar.classList.remove('mobile-expanded');
-         }
-      }
-    });
-
-    navBar.querySelectorAll('.game-nav-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-         if (window.innerWidth < 992) {
-           resetCollapseTimeout();
-           e.stopPropagation();
-         }
-      });
-    });
-
-    function resetCollapseTimeout() {
-      clearTimeout(collapseTimeout);
-      collapseTimeout = setTimeout(function() {
-        navBar.classList.remove('mobile-expanded');
-      }, 10000);
-    }
-
-    if (window.innerWidth < 992 && sessionStorage.getItem('navExpanded') === '1') {
-      sessionStorage.removeItem('navExpanded');
-      navBar.classList.add('mobile-expanded');
-      resetCollapseTimeout();
-    }
-  }
-
-  /* ============ DVD fairness normalization ============ */
-  /* Smaller screens have less travel distance, so normalize the effective
-     simulation rate to keep wall/corner opportunities comparable. */
-  if(/(?:^|\\/)game5\\.html$/i.test(window.location.pathname)){
-    var dvdStage = document.getElementById('dvd-stage');
-    var dvdLogo = document.getElementById('dvd-logo');
-    if(dvdStage && dvdLogo && window.requestAnimationFrame){
-      var referenceTravelW = 1216;
-      var referenceTravelH = 684;
-      var dvdSpeedScale = 1;
-
-      function recalculateDvdFairness(){
-        var travelW = Math.max(dvdStage.clientWidth - dvdLogo.offsetWidth, 1);
-        var travelH = Math.max(dvdStage.clientHeight - dvdLogo.offsetHeight, 1);
-        var referenceCollisionRate = (1 / referenceTravelW) + (1 / referenceTravelH);
-        var currentCollisionRate = (1 / travelW) + (1 / travelH);
-        dvdSpeedScale = Math.max(0.35, Math.min(1, referenceCollisionRate / currentCollisionRate));
-      }
-
-      recalculateDvdFairness();
-
-      var nativeRequestAnimationFrame = window.requestAnimationFrame.bind(window);
-      var virtualDvdTime = performance.now();
-      var previousDvdRealTime = virtualDvdTime;
-      window.requestAnimationFrame = function(callback){
-        return nativeRequestAnimationFrame(function(realNow){
-          var realDelta = Math.min(Math.max(realNow - previousDvdRealTime, 0), 50);
-          virtualDvdTime += realDelta * dvdSpeedScale;
-          previousDvdRealTime = realNow;
-          callback(virtualDvdTime);
-        });
-      };
-
-      window.addEventListener('resize', recalculateDvdFairness, {passive:true});
-    }
   }
 
 })();
