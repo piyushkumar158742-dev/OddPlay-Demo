@@ -19,8 +19,8 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overscroll-behavior: none; }
-  html { background: var(--bg-1); }
+  html, body { height: 100%; width: 100%; overscroll-behavior: none; overflow: hidden; }
+  html { background: var(--bg-1); overflow: hidden; width: 100%; }
 
   body {
     background:
@@ -45,7 +45,12 @@
     30%, 50%, 70% { transform: translateX(-8px); }
     40%, 60% { transform: translateX(8px); }
   }
-  body.screen-shake { animation: screenShake 0.4s; }
+  body.screen-shake .topbar,
+  body.screen-shake .hud,
+  body.screen-shake .stage-wrap,
+  body.screen-shake .keyboard-dock {
+    animation: screenShake 0.4s;
+  }
 
   .scanlines {
     position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.35;
@@ -796,118 +801,7 @@
     btn.addEventListener('click', () => processKey(btn.dataset.key));
   });
 
-  // ===========================================================
-  // Shared arcade chrome — settings panel + bottom game nav
-  // ===========================================================
-  (function () {
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsPanel = document.getElementById('settings-panel');
-    const soundToggle = document.getElementById('sound-toggle');
-    let soundOn = true;
-
-    function setToggleState(btn, on) {
-      if (!btn) return;
-      btn.classList.toggle('on', on);
-      btn.setAttribute('aria-checked', on ? 'true' : 'false');
-    }
-    setToggleState(soundToggle, soundOn);
-
-    if (settingsBtn && settingsPanel) {
-      settingsBtn.addEventListener('click', () => {
-        const open = settingsPanel.classList.toggle('open');
-        settingsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
-      document.addEventListener('click', (e) => {
-        if (settingsPanel.classList.contains('open') &&
-            !settingsPanel.contains(e.target) &&
-            !settingsBtn.contains(e.target)) {
-          settingsPanel.classList.remove('open');
-          settingsBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
-    }
-    if (soundToggle) {
-      soundToggle.addEventListener('click', () => {
-        soundOn = !soundOn;
-        setToggleState(soundToggle, soundOn);
-      });
-    }
-
-    const GAMES = [
-      { name: "Cosmic Calendar", url: "index.html" },
-      { name: "Block Market", url: "game2.html" },
-      { name: "Stop at 5.000", url: "game3.html" },
-      { name: "A is Z Typer", url: "game4.html" },
-      { name: "DVD Bounce", url: "game5.html" }
-    ];
-    const currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10) || 0;
-
-    function loadGame(idx) {
-      idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
-      if (idx === currentGameIndex) return;
-      if (window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
-      window.location.href = GAMES[idx].url;
-    }
-
-    function wireNavButton(id, handler) {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener('click', handler);
-    }
-    wireNavButton('back-game-btn', () => loadGame(currentGameIndex - 1));
-    wireNavButton('random-game-btn', () => {
-      let idx;
-      do { idx = Math.floor(Math.random() * GAMES.length); } while (idx === currentGameIndex && GAMES.length > 1);
-      loadGame(idx);
-    });
-    wireNavButton('next-game-btn', () => loadGame(currentGameIndex + 1));
-
-    const navBar = document.querySelector('.game-nav');
-    if (navBar) {
-      document.addEventListener('mousemove', (e) => {
-        if (window.innerWidth >= 992) {
-          const revealZone = Math.max(140, window.innerHeight * 0.18);
-          if (window.innerHeight - e.clientY < revealZone) {
-            navBar.classList.add('desktop-visible');
-          } else {
-            navBar.classList.remove('desktop-visible');
-          }
-        }
-      });
-
-      let collapseTimeout;
-      function resetCollapseTimeout() {
-        clearTimeout(collapseTimeout);
-        collapseTimeout = setTimeout(() => navBar.classList.remove('mobile-expanded'), 10000);
-      }
-      navBar.addEventListener('click', (e) => {
-        if (window.innerWidth < 992) {
-          if (!navBar.classList.contains('mobile-expanded')) {
-            e.preventDefault();
-            navBar.classList.add('mobile-expanded');
-            resetCollapseTimeout();
-          }
-        }
-      });
-      document.addEventListener('click', (e) => {
-        if (window.innerWidth < 992 && navBar.classList.contains('mobile-expanded') && !navBar.contains(e.target)) {
-          navBar.classList.remove('mobile-expanded');
-        }
-      });
-      navBar.querySelectorAll('.game-nav-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (window.innerWidth < 992) {
-            resetCollapseTimeout();
-            e.stopPropagation();
-          }
-        });
-      });
-      if (window.innerWidth < 992 && sessionStorage.getItem('navExpanded') === '1') {
-        sessionStorage.removeItem('navExpanded');
-        navBar.classList.add('mobile-expanded');
-        resetCollapseTimeout();
-      }
-    }
-  })();
+  // Shared arcade controls are provided by shared.js.
 
   window.onload = () => {
     fitKeyboardDock();
@@ -915,5 +809,6 @@
     startNextWord();
   };
 </script>
+<script src="shared.js"></script>
 </body>
 </html>
