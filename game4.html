@@ -824,13 +824,6 @@
 
   // ---- Physical keyboard ----
   document.addEventListener('keydown', (e) => {
-    if (e.key === '8') {
-      stopTimer();
-      stage = 'thanks';
-      startNextWord();
-      return;
-    }
-
     if (e.key === 'Backspace' || e.key === ' ') {
       e.preventDefault();
     }
@@ -847,6 +840,6 @@
     btn.addEventListener('click', () => processKey(btn.dataset.key));
   });
 
-  // Shared arcade controls are provided by shared.js?v=20260920c"shared.js?v=20260920c"></script>
+  // Shared arcade controls are provided by shared.js></script>
 </body>
 </html>
