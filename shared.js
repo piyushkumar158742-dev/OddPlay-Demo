@@ -215,49 +215,17 @@
   }
 
   /* ============ Game ecosystem registry ============ */
-  var FALLBACK_GAMES = [
+  /* Navigation is intentionally local and synchronous. The five-game fallback
+     is the canonical runtime list, so a network request can never block play. */
+  var GAMES = [
     { id:"cosmic-calendar", name:"Cosmic Calendar", url:"game1.html" },
     { id:"block-market", name:"Block Market", url:"game2.html" },
     { id:"stop-at-5000", name:"Stop at 5.000", url:"game3.html" },
     { id:"a-is-z-typer", name:"A is Z Typer", url:"game4.html" },
     { id:"dvd-game", name:"DVD Game", url:"game5.html" }
   ];
-  var GAMES = FALLBACK_GAMES.slice();
-  var currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10) || 0;
-
-  /* ============ Game ecosystem registry ============ */
-  var FALLBACK_GAMES = [
-    { id:"cosmic-calendar", name:"Cosmic Calendar", url:"game1.html" },
-    { id:"block-market", name:"Block Market", url:"game2.html" },
-    { id:"stop-at-5000", name:"Stop at 5.000", url:"game3.html" },
-    { id:"a-is-z-typer", name:"A is Z Typer", url:"game4.html" },
-    { id:"dvd-game", name:"DVD Game", url:"game5.html" }
-  ];
-  var GAMES = FALLBACK_GAMES.slice();
-  var currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10) || 0;
-
-  function isValidGameRegistry(games){
-    return Array.isArray(games) && games.length > 0 && games.every(function(game){
-      return game && typeof game.name === 'string' && game.name.trim() &&
-             typeof game.url === 'string' && game.url.trim();
-    });
-  }
-
-  var gamesReady = fetch('games.json', {cache:'no-store'})
-    .then(function(response){
-      if(!response.ok) throw new Error('games.json returned HTTP ' + response.status);
-      return response.json();
-    })
-    .then(function(games){
-      if(!isValidGameRegistry(games)) throw new Error('Invalid games.json registry');
-      GAMES = games;
-      return GAMES;
-    })
-    .catch(function(error){
-      console.error('Kroma game registry failed to load:', error);
-      GAMES = FALLBACK_GAMES.slice();
-      return GAMES;
-    });
+  var currentGameIndex = parseInt(document.body.getAttribute('data-game-index'), 10);
+  if(!isFinite(currentGameIndex)) currentGameIndex = 0;
 
   function loadGame(idx){
     idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
