@@ -108,30 +108,36 @@
   });
 
   /* ============ Background music (persists across pages) ============ */
-  var bgMusic = new Audio('Sunday_Morning_Level_Up.mp3');
+  var bgMusic = new Audio('./Sunday_Morning_Level_Up.mp3?v=2');
   bgMusic.loop = true;
   bgMusic.volume = 0.5;
+  bgMusic.preload = 'auto';
+  bgMusic.setAttribute('playsinline', '');
 
   window.__arcadeSoundOn = function(){
     var v = localStorage.getItem('arcadeSoundOn');
     return v === null ? true : v === '1';
   };
 
+  function tryPlayMusic(){
+    if(!window.__arcadeSoundOn()) return;
+    var playPromise = bgMusic.play();
+    if(playPromise && playPromise.catch) playPromise.catch(function(){});
+  }
+
   function applyMusicState(){
     if(window.__arcadeSoundOn()){
-      var playPromise = bgMusic.play();
-      if(playPromise && playPromise.catch){
-        playPromise.catch(function(){
-          function resumeOnGesture(){ bgMusic.play().catch(function(){}); }
-          document.addEventListener('click', resumeOnGesture, {once:true});
-          document.addEventListener('keydown', resumeOnGesture, {once:true});
-          document.addEventListener('touchstart', resumeOnGesture, {once:true});
-        });
-      }
+      tryPlayMusic();
     } else {
       bgMusic.pause();
     }
   }
+
+  /* Browsers often block autoplay. Any real user interaction while Sound is
+     enabled is treated as permission to start/resume the soundtrack. */
+  ['pointerdown','touchstart','click','keydown'].forEach(function(eventName){
+    document.addEventListener(eventName, function(){ tryPlayMusic(); }, {passive:true});
+  });
 
   var savedMusicTime = parseFloat(sessionStorage.getItem('arcadeMusicTime'));
   if(!isNaN(savedMusicTime)){
