@@ -1,28 +1,40 @@
-# Kroma-Demo
+# OddPlay-Demo
 
-A small collection of browser games and interactive experiments.
+A small browser arcade built around one idea: **open it, find something interesting, and play immediately.**
 
-## Structure
+## Games
 
-```text
-Kroma-Demo/
-├── assets/
-│   ├── css/
-│   │   └── shared.css
-│   └── js/
-│       └── shared.js
-├── games.json
-├── index.html
-├── game2.html
-├── game3.html
-├── game4.html
-└── game5.html
-```
+| Page | Game | Type |
+|---|---|---|
+| `game1.html` | Cosmic Calendar | Interactive timeline |
+| `game2.html` | Block Market | Shopping/simulation |
+| `game3.html` | Stop at 5.000 | Timing |
+| `game4.html` | A is Z Typer | Typing |
+| `game5.html` | DVD Game | Arcade |
 
-### Rules
+## How it works
 
-- `games.json` is the single game registry.
-- `assets/css/shared.css` is the canonical shared stylesheet.
-- `assets/js/shared.js` is the canonical shared runtime/navigation code.
-- The root `shared.css` and `shared.js` files are temporary compatibility loaders for the existing root game pages. They contain no game logic.
-- Game pages stay at the repository root for simple GitHub Pages URLs.
+- `index.html` is the premium loading/entry screen and sends the player to a random game.
+- `games.json` documents the live game catalog used by the loader.
+- `shared.css` contains the shared OddPlay visual shell.
+- `shared.js` contains shared settings, soundtrack state, music-position persistence, and desktop/mobile game navigation.
+- `Sunday_Morning_Level_Up.mp3` is the shared arcade soundtrack.
+- Every game keeps its own game logic in its root HTML file so each page remains directly playable on GitHub Pages.
+
+## Navigation
+
+Back/Next are direct page links, while Random is handled by the shared runtime. This keeps navigation working even if the game registry request or another optional network resource is unavailable.
+
+On mobile, the game navigation is always visible as a compact bottom control instead of requiring a hidden expansion gesture.
+
+## Design goals
+
+- Fast startup and low friction.
+- Mobile-safe controls.
+- No account or progression requirement.
+- Small, focused games rather than an oversized platform.
+- Shared visual language without forcing every game to look identical.
+
+## GitHub Pages
+
+The project is designed to work as a static site: no server or build step is required.
