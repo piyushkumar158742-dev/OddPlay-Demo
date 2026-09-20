@@ -263,13 +263,21 @@
       return GAMES;
     });
 
+  function navigateToGame(idx){
+    idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
+    if(idx === currentGameIndex) return;
+    if(window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
+    window.location.assign(GAMES[idx].url);
+  }
+
   function loadGame(idx){
-    gamesReady.then(function(){
-      idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
-      if(idx === currentGameIndex) return;
-      if(window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
-      window.location.href = GAMES[idx].url;
-    });
+    /* Navigation must never wait for games.json. The fallback registry is
+       complete and available immediately; a successful fetch only refreshes
+       the registry for later navigation. */
+    idx = ((idx % GAMES.length) + GAMES.length) % GAMES.length;
+    if(idx === currentGameIndex) return;
+    if(window.innerWidth < 992) { sessionStorage.setItem('navExpanded', '1'); }
+    window.location.assign(GAMES[idx].url);
   }
 
   function wireNavButton(id, handler){
@@ -278,12 +286,11 @@
   }
   wireNavButton('first-game-btn', function(){ loadGame(0); });
   wireNavButton('back-game-btn', function(){ loadGame(currentGameIndex-1); });
-  wireNavButton('random-game-btn', function(){
-    gamesReady.then(function(){
-      var idx;
-      do{ idx = Math.floor(Math.random()*GAMES.length); } while(idx===currentGameIndex && GAMES.length>1);
-      loadGame(idx);
-    });
+  wireNavButton('random-game-btn', function(e){
+    if(e) e.preventDefault();
+    var idx;
+    do{ idx = Math.floor(Math.random()*GAMES.length); } while(idx===currentGameIndex && GAMES.length>1);
+    loadGame(idx);
   });
   wireNavButton('next-game-btn', function(){ loadGame(currentGameIndex+1); });
   wireNavButton('last-game-btn', function(){
@@ -328,7 +335,7 @@
       btn.addEventListener('click', function(e) {
          if (window.innerWidth < 992) {
            resetCollapseTimeout();
-           e.stopPropagation(); 
+           e.stopPropagation();
          }
       });
     });
