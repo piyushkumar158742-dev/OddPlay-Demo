@@ -156,6 +156,23 @@
   @media (min-width:1400px){
     .app-container{max-width:1280px;}
   }
+
+  /* Compact desktop composition */
+  @media (min-width:992px){
+    .app-container{max-width:1120px !important;height:min(68vh,560px) !important;}
+    .calendar-section{padding:22px !important;gap:14px !important;}
+    .event-panel{padding:28px 30px !important;}
+    .calendar-grid{gap:6px 8px !important;}
+    .day{font-size:.9rem !important;border-radius:10px !important;}
+    .month-nav{min-height:52px !important;}
+    .nav-btn{width:42px !important;height:42px !important;}
+    .event-title{font-size:2rem !important;margin-bottom:12px !important;}
+    .event-desc{font-size:.98rem !important;line-height:1.55 !important;max-height:28vh !important;}
+    .orbit-progress{margin-top:16px !important;}
+  }
+  @media (min-width:1400px){
+    .app-container{max-width:1180px !important;height:540px !important;}
+  }
 </style>
     
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png?v=20260921-2">
