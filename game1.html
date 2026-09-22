@@ -173,6 +173,34 @@
   @media (min-width:1400px){
     .app-container{width:calc(100% - 64px) !important;max-width:1360px !important;height:540px !important;}
   }
+  @media (max-width:991px){
+    body[data-game-index="0"]{gap:12px;padding-bottom:94px!important;}
+    body[data-game-index="0"] header{padding:0 54px 0 14px;box-sizing:border-box;}
+    body[data-game-index="0"] .app-container{
+      width:calc(100% - 20px)!important;max-width:none!important;
+      margin:0 auto!important;gap:12px!important;flex:0 0 auto!important;
+    }
+    body[data-game-index="0"] .calendar-section{
+      width:100%!important;height:min(60vh,440px)!important;min-height:360px!important;
+      flex:none!important;padding:12px!important;gap:10px!important;border-radius:20px!important;
+    }
+    body[data-game-index="0"] .month-nav{min-height:50px!important;padding:4px!important;}
+    body[data-game-index="0"] .nav-btn{width:42px!important;height:42px!important;}
+    body[data-game-index="0"] .month-display{font-size:.9rem!important;letter-spacing:1.5px!important;}
+    body[data-game-index="0"] .calendar-grid{gap:5px!important;grid-auto-rows:minmax(34px,1fr)!important;}
+    body[data-game-index="0"] .day{border-radius:9px!important;font-size:.75rem!important;}
+    body[data-game-index="0"] .event-panel{
+      width:100%!important;min-height:220px!important;height:auto!important;flex:none!important;
+      padding:20px 18px!important;border-radius:20px!important;justify-content:flex-start!important;
+    }
+    body[data-game-index="0"] .event-content{width:100%!important;}
+    body[data-game-index="0"] .event-title{font-size:1.45rem!important;line-height:1.22!important;}
+    body[data-game-index="0"] .event-desc{
+      font-size:.9rem!important;line-height:1.55!important;max-height:none!important;
+      overflow:visible!important;padding-right:0!important;
+    }
+    body[data-game-index="0"] .orbit-progress{margin-top:14px!important;}
+  }
 </style>
     
       <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=20260921-5">
