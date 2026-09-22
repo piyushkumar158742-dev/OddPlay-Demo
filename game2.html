@@ -122,7 +122,7 @@ input[type="text"]::placeholder { color: #4b5563; }
 
 <style id="block-market-compact-v2">
   @media (min-width:992px){
-    .block-market-page-width,#items-grid{max-width:1120px !important;}
+    .block-market-page-width,#items-grid{width:100% !important;max-width:none !important;}
     .item-card{border-radius:16px !important;padding:12px !important;}
     .icon-slot{width:68px !important;height:68px !important;margin:4px auto 10px !important;border-radius:12px !important;}
     .pixel-canvas{width:50px !important;height:50px !important;}
@@ -135,7 +135,7 @@ input[type="text"]::placeholder { color: #4b5563; }
     .item-card input[type="text"]{font-size:14px !important;}
   }
   @media (min-width:1400px){
-    .block-market-page-width,#items-grid{max-width:1180px !important;}
+    .block-market-page-width,#items-grid{width:100% !important;max-width:none !important;}
   }
 </style>
 
@@ -206,12 +206,12 @@ input[type="text"]::placeholder { color: #4b5563; }
     </button>
 </div>
 </header>
-<div class="block-market-page-width max-w-[1500px] mx-auto px-3 sm:px-6">
+<div class="block-market-page-width w-full px-3 sm:px-6">
   <div id="items-grid" class="grid grid-cols-1 min-[450px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 items-stretch"></div>
 </div>
 
 <!-- Receipt Modal -->
-<div id="receipt-modal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md p-4" onclick="closeReceipt()">
+<div id="receipt-modal" class="fixed inset-0 bg-black/80 z-[1200] hidden items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md p-4" onclick="closeReceipt()">
   <div id="receipt-content" class="bg-[#0a0a0a] border border-[#222] rounded-3xl w-full max-w-2xl flex flex-col relative shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh]" onclick="event.stopPropagation()">
     <button onclick="closeReceipt()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-[#111] hover:bg-[#222] p-2 rounded-full z-10 border border-[#222]">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -243,7 +243,7 @@ input[type="text"]::placeholder { color: #4b5563; }
 </div>
 
 <!-- Empty Cart Modal -->
-<div id="empty-cart-modal" class="fixed inset-0 bg-black/80 z-[110] hidden items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md p-4" onclick="closeEmptyCart()">
+<div id="empty-cart-modal" class="fixed inset-0 bg-black/80 z-[1210] hidden items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md p-4" onclick="closeEmptyCart()">
   <div id="empty-cart-content" class="bg-[#0a0a0a] border border-[#222] rounded-3xl w-full max-w-sm flex flex-col items-center justify-center p-8 sm:p-12 relative shadow-[0_0_40px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-300 text-center" onclick="event.stopPropagation()">
     <div class="w-20 h-20 rounded-full bg-[#0a0a0c] border border-[#222] flex items-center justify-center mb-6 text-emerald-500 shadow-[inset_0_0_15px_rgba(52,217,122,0.1)]">
       <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
