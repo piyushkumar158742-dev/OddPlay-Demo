@@ -151,15 +151,15 @@
 
   /* Desktop sizing: keep the calendar elegant and slightly more compact on wide screens. */
   @media (min-width:992px){
-    .app-container{max-width:1360px;}
+    .app-container{width:100%;max-width:none;}
   }
   @media (min-width:1400px){
-    .app-container{max-width:1280px;}
+    .app-container{width:100%;max-width:none;}
   }
 
   /* Compact desktop composition */
   @media (min-width:992px){
-    .app-container{max-width:1120px !important;height:min(68vh,560px) !important;}
+    .app-container{width:100% !important;max-width:none !important;height:min(68vh,560px) !important;}
     .calendar-section{padding:22px !important;gap:14px !important;}
     .event-panel{padding:28px 30px !important;}
     .calendar-grid{gap:6px 8px !important;}
@@ -171,7 +171,7 @@
     .orbit-progress{margin-top:16px !important;}
   }
   @media (min-width:1400px){
-    .app-container{max-width:1180px !important;height:540px !important;}
+    .app-container{width:100% !important;max-width:none !important;height:540px !important;}
   }
 </style>
     
