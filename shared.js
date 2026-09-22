@@ -110,7 +110,8 @@
   /* ============ Shared arcade controls ============ */
   function ensureSharedControls(){
     var body = document.body;
-    if(!body) return;
+    var controlsRoot = document.documentElement;
+    if(!body || !controlsRoot) return;
 
     if(!document.getElementById('settings-btn')){
       var settingsBtn = document.createElement('button');
@@ -121,7 +122,7 @@
       settingsBtn.setAttribute('aria-haspopup','true');
       settingsBtn.setAttribute('aria-expanded','false');
       settingsBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="5" r="1.6" fill="currentColor"></circle><circle cx="12" cy="12" r="1.6" fill="currentColor"></circle><circle cx="12" cy="19" r="1.6" fill="currentColor"></circle></svg>';
-      body.appendChild(settingsBtn);
+      controlsRoot.appendChild(settingsBtn);
     }
 
     if(!document.getElementById('settings-panel')){
@@ -131,7 +132,7 @@
       panel.setAttribute('role','dialog');
       panel.setAttribute('aria-label','Settings');
       panel.innerHTML = '<h2>Settings</h2><div class="settings-row"><span>Sound</span><button class="settings-toggle" id="sound-toggle" role="switch" aria-checked="true" type="button" aria-label="Toggle sound"></button></div>';
-      body.appendChild(panel);
+      controlsRoot.appendChild(panel);
     }
 
     if(!document.getElementById('game-nav')){
@@ -149,7 +150,7 @@
         '<a class="game-nav-btn" id="next-game-btn" href="game2.html" aria-label="Next game">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 5l9 7-9 7Z"></path></svg>'+
         '</a>';
-      body.appendChild(nav);
+      controlsRoot.appendChild(nav);
     }
 
     var idx = parseInt(body.getAttribute('data-game-index'),10);
