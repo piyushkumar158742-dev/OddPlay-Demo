@@ -118,47 +118,7 @@ input[type="text"]::placeholder { color: #4b5563; }
 /* ============ GAME NAV — bottom bar ============ */
 </style>
 <link rel="stylesheet" href="shared.css">
-    <style id="block-market-layout">
-  #block-market-header{
-    position:fixed!important;top:0!important;left:0!important;right:0!important;
-    width:100%!important;height:80px!important;min-height:80px!important;
-    display:flex!important;align-items:center!important;z-index:200!important;
-    box-sizing:border-box!important;
-  }
-  #block-market-header>.block-market-brand{
-    flex:1 1 0!important;width:auto!important;min-width:0!important;
-    display:flex!important;align-items:center!important;
-  }
-  #block-market-header>#ticker-wrap{
-    position:absolute!important;left:50%!important;top:50%!important;
-    transform:translate(-50%,-50%)!important;width:auto!important;z-index:2!important;
-  }
-  #block-market-header>.block-market-actions{
-    flex:1 1 0!important;width:auto!important;min-width:0!important;
-    display:flex!important;align-items:center!important;justify-content:flex-end!important;
-    gap:10px!important;padding-right:76px!important;position:relative!important;z-index:3!important;
-  }
-  #block-market-header .block-market-receipt{
-    position:relative!important;inset:auto!important;margin:0!important;
-    transform:none!important;white-space:nowrap!important;z-index:3!important;
-  }
-  body[data-game-index="1"]{padding-top:92px!important;padding-bottom:84px!important;}
-  #settings-btn{
-    position:fixed!important;top:18px!important;right:18px!important;
-    width:44px!important;height:44px!important;z-index:1000!important;
-    display:flex!important;align-items:center!important;justify-content:center!important;
-    border-radius:50%!important;
-  }
-  #settings-panel{z-index:1010!important;}
-  @media(max-width:767px){
-    #block-market-header{height:70px!important;min-height:70px!important;padding:0 14px!important;}
-    #block-market-header>.block-market-actions{padding-right:58px!important;gap:8px!important;}
-    #block-market-header>#ticker-wrap{left:auto!important;right:58px!important;transform:translateY(-50%)!important;}
-    body[data-game-index="1"]{padding-top:80px!important;padding-bottom:76px!important;}
-    #block-market-header .block-market-receipt{font-size:12px!important;padding:9px 12px!important;}
-    #settings-btn{top:13px!important;right:13px!important;width:44px!important;height:44px!important;}
-  }
-</style>
+    
 
 <style id="block-market-compact-v2">
   @media (min-width:992px){
@@ -179,71 +139,32 @@ input[type="text"]::placeholder { color: #4b5563; }
   }
 </style>
 
-<style id="block-market-final-layout">
-  /* Fixed top bar with a dedicated safe area for the shared settings button. */
-  #block-market-header{
-    position:fixed !important;
-    top:0 !important; left:0 !important; right:0 !important;
-    width:100% !important;
-    height:80px !important; min-height:80px !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:space-between !important;
-    z-index:200 !important;
-    box-sizing:border-box !important;
-  }
-  #block-market-header > .block-market-brand{
-    flex:1 1 0 !important;
-    width:auto !important;
-    min-width:0 !important;
-    display:flex !important;
-    align-items:center !important;
-  }
-  #block-market-header > #ticker-wrap{
-    position:absolute !important;
-    top:50% !important; left:50% !important;
-    transform:translate(-50%,-50%) !important;
-    width:auto !important;
-    max-width:none !important;
-    z-index:2 !important;
-  }
-  #block-market-header > .block-market-actions{
-    flex:1 1 0 !important;
-    width:auto !important;
-    min-width:0 !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:flex-end !important;
-    gap:12px !important;
-    padding-right:92px !important;
-    position:relative !important;
-    z-index:4 !important;
-  }
-  #block-market-header .block-market-receipt{
-    position:relative !important;
-    inset:auto !important;
-    margin:0 !important;
-    transform:none !important;
-    z-index:4 !important;
-    white-space:nowrap !important;
-  }
-  body[data-game-index="1"]{
-    padding-top:96px !important;
-    padding-bottom:88px !important;
-  }
-  #items-grid{
-    margin-top:0 !important;
-  }
-  @media (max-width:767px){
-    #block-market-header{height:70px !important;min-height:70px !important;padding-left:14px !important;padding-right:14px !important;}
-    #block-market-header > .block-market-actions{padding-right:58px !important;gap:8px !important;}
-    #block-market-header > #ticker-wrap{left:auto !important;right:58px !important;top:50% !important;transform:translateY(-50%) !important;}
-    #block-market-header .block-market-receipt{font-size:12px !important;padding:9px 12px !important;}
-    body[data-game-index="1"]{padding-top:82px !important;padding-bottom:76px !important;}
-  }
-</style>
+
     <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=20260921-5">
-</head>
+<style id="block-market-clean-layout">
+  #block-market-header{
+    position:fixed!important;top:0!important;left:0!important;right:0!important;
+    width:100%!important;height:80px!important;min-height:80px!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+    align-items:center!important;z-index:200!important;box-sizing:border-box!important;
+  }
+  #block-market-header>.block-market-brand{grid-column:1;min-width:0;display:flex!important;align-items:center!important;width:auto!important;}
+  #block-market-header>#ticker-wrap{grid-column:2;position:static!important;transform:none!important;width:auto!important;z-index:2!important;}
+  #block-market-header>.block-market-actions{
+    grid-column:3;min-width:0;width:auto!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;
+    gap:10px!important;padding-right:74px!important;position:relative!important;z-index:3!important;
+  }
+  #block-market-header .block-market-receipt{position:relative!important;inset:auto!important;margin:0!important;transform:none!important;z-index:3!important;white-space:nowrap!important;}
+  body[data-game-index="1"]{padding-top:92px!important;padding-bottom:84px!important;}
+  @media(max-width:767px){
+    #block-market-header{height:70px!important;min-height:70px!important;padding:0 12px!important;grid-template-columns:minmax(0,1fr) auto!important;}
+    #block-market-header>.block-market-brand{grid-column:1;}
+    #block-market-header>#ticker-wrap{grid-column:2;justify-self:end;margin-right:58px!important;}
+    #block-market-header>.block-market-actions{grid-column:2;position:absolute!important;right:0;top:0;height:70px;padding-right:58px!important;pointer-events:auto;}
+    #block-market-header .block-market-receipt{font-size:12px!important;padding:9px 12px!important;}
+    body[data-game-index="1"]{padding-top:80px!important;padding-bottom:76px!important;}
+  }
+</style></head>
 <body class="pt-[82px] pb-16 antialiased" data-game-index="1">
   <!-- Shared arcade controls are generated by shared.js. -->
 
