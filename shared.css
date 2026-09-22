@@ -95,12 +95,46 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
 .game-nav-btn:focus-visible{outline:2px solid var(--stellar-gold);outline-offset:2px}
 .game-nav-btn.random-btn{color:var(--stellar-gold)}
 .game-nav-btn.random-btn:hover{background:rgba(240,194,110,.14);color:var(--stellar-gold)}
+.game-nav-toggle{display:none;}
 @media(max-width:991px){
   .settings-btn{top:max(10px,env(safe-area-inset-top))!important;right:max(10px,env(safe-area-inset-right))!important;width:42px!important;height:42px!important}
   .settings-panel{top:calc(max(10px,env(safe-area-inset-top)) + 50px)!important;right:max(10px,env(safe-area-inset-right))!important;width:min(280px,calc(100vw - 20px))}
-  .game-nav{bottom:max(8px,env(safe-area-inset-bottom));max-width:calc(100vw - 20px);padding:5px;gap:3px;border-radius:18px}
-  .game-nav-btn{flex-basis:42px;width:42px;height:42px;border-radius:13px}
-  .game-nav-btn svg{width:17px;height:17px}
+  .game-nav{
+    left:auto!important;right:max(12px,env(safe-area-inset-right))!important;
+    bottom:max(12px,env(safe-area-inset-bottom))!important;
+    transform:none!important;width:52px!important;height:52px!important;min-width:52px!important;max-width:none!important;
+    padding:0!important;gap:0!important;border-radius:50%!important;overflow:visible!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;z-index:1050!important;
+  }
+  .game-nav::before{display:none!important;content:none!important}
+  .game-nav-toggle{
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    width:52px!important;height:52px!important;min-width:52px!important;
+    padding:0!important;border:1px solid var(--panel-border)!important;border-radius:50%!important;
+    background:var(--panel-glass-solid)!important;color:var(--text-primary)!important;
+    box-shadow:var(--shadow-soft);cursor:pointer;transition:transform .2s ease,color .2s ease;
+  }
+  .game-nav-toggle svg{width:21px!important;height:21px!important;pointer-events:none}
+  .game-nav-btn{
+    position:absolute!important;right:5px!important;
+    width:42px!important;height:42px!important;min-width:42px!important;flex:0 0 42px!important;
+    padding:0!important;border-radius:50%!important;
+    opacity:0!important;transform:translateY(6px) scale(.72)!important;
+    pointer-events:none!important;background:var(--panel-glass-solid)!important;
+    border:1px solid var(--panel-border)!important;box-shadow:0 12px 28px rgba(0,0,0,.35);
+    transition:opacity .18s ease,transform .18s ease,background .2s ease,color .2s ease;
+  }
+  #back-game-btn{bottom:58px!important}
+  #random-game-btn{bottom:108px!important}
+  #next-game-btn{bottom:158px!important}
+  .game-nav.mobile-expanded .game-nav-btn{
+    opacity:1!important;transform:translateY(0) scale(1)!important;pointer-events:auto!important;
+  }
+  .game-nav.mobile-expanded .game-nav-toggle{
+    color:var(--stellar-gold)!important;transform:rotate(45deg);
+  }
+  .game-nav-btn svg{width:18px!important;height:18px!important}
+  body[data-game-index="0"]{padding-bottom:88px!important}
 }
 @media(prefers-reduced-motion:reduce){
   .settings-btn,.settings-panel,.game-nav-btn{transition:none}
