@@ -141,15 +141,18 @@
       nav.className = 'game-nav';
       nav.setAttribute('aria-label','Game navigation');
       nav.innerHTML =
-        '<a class="game-nav-btn" id="back-game-btn" href="game5.html" aria-label="Previous game">'+
+        '<a class="game-nav-btn" id="back-game-btn" href="game5.html" aria-label="Previous game" title="Previous game">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 5 7.5 12l9 7Z"></path></svg>'+
         '</a>'+
-        '<button class="game-nav-btn random-btn" id="random-game-btn" type="button" aria-label="Random game">'+
+        '<button class="game-nav-btn random-btn" id="random-game-btn" type="button" aria-label="Random game" title="Random game">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"></circle></svg>'+
         '</button>'+
-        '<a class="game-nav-btn" id="next-game-btn" href="game2.html" aria-label="Next game">'+
+        '<a class="game-nav-btn" id="next-game-btn" href="game2.html" aria-label="Next game" title="Next game">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 5l9 7-9 7Z"></path></svg>'+
-        '</a>';
+        '</a>'+
+        '<button class="game-nav-toggle" id="game-nav-toggle" type="button" aria-label="Open game navigation" aria-expanded="false" title="Game navigation">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>'+
+        '</button>';
       controlsRoot.appendChild(nav);
     }
 
@@ -329,6 +332,26 @@
   wireNavButton('next-game-btn', function(){ loadGame(currentGameIndex+1); });
   wireNavButton('first-game-btn', function(){ loadGame(0); });
   wireNavButton('last-game-btn', function(){ loadGame(GAMES.length-1); });
+
+  /* Mobile game navigation menu */
+  var gameNav = document.querySelector('.game-nav');
+  var gameNavToggle = document.getElementById('game-nav-toggle');
+  if(gameNav && gameNavToggle){
+    gameNavToggle.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var open = gameNav.classList.toggle('mobile-expanded');
+      gameNavToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      gameNavToggle.setAttribute('aria-label', open ? 'Close game navigation' : 'Open game navigation');
+    });
+    document.addEventListener('click', function(e){
+      if(window.innerWidth < 992 && gameNav.classList.contains('mobile-expanded') && !gameNav.contains(e.target)){
+        gameNav.classList.remove('mobile-expanded');
+        gameNavToggle.setAttribute('aria-expanded','false');
+        gameNavToggle.setAttribute('aria-label','Open game navigation');
+      }
+    });
+  }
 
   /* ============ Nav Bar Visibility ============ */
   var navBar = document.querySelector('.game-nav');
