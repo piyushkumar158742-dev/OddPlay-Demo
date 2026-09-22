@@ -180,6 +180,20 @@
     return v === null ? true : v === '1';
   };
 
+  /* Keep the sound preference global across every game/page in this site.
+     localStorage is shared by all game HTML pages on the same origin. */
+  window.__arcadeSetSoundOn = function(on){
+    on = !!on;
+    localStorage.setItem('arcadeSoundOn', on ? '1' : '0');
+    soundOn = on;
+    if(on){
+      tryPlayMusic();
+    } else {
+      bgMusic.pause();
+    }
+    setToggleState(document.getElementById('sound-toggle'), on);
+  };
+
   function restoreMusicPosition(){
     if(musicPositionRestored || isNaN(savedMusicTime)) return;
     var duration = bgMusic.duration;
@@ -247,6 +261,15 @@
     btn.classList.toggle('on', on);
     btn.setAttribute('aria-checked', on ? 'true' : 'false');
   }
+
+  /* Sync the toggle if another same-origin tab/window changes the setting. */
+  window.addEventListener('storage', function(e){
+    if(e.key !== 'arcadeSoundOn') return;
+    soundOn = window.__arcadeSoundOn();
+    setToggleState(soundToggle, soundOn);
+    if(soundOn) tryPlayMusic();
+    else bgMusic.pause();
+  });
   setToggleState(soundToggle, soundOn);
 
   if(settingsBtn && settingsPanel){
