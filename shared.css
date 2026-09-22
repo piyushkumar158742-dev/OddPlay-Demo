@@ -28,30 +28,33 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
 
 /* ============ Shared arcade controls ============ */
 .settings-btn{
-  position:fixed;
-  top:max(14px,env(safe-area-inset-top));
-  right:max(14px,5vw);
-  width:44px;height:44px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--panel-glass);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  position:fixed!important;
+  top:max(14px,env(safe-area-inset-top))!important;
+  right:max(14px,env(safe-area-inset-right))!important;
+  width:44px!important;height:44px!important;
+  margin:0!important;padding:0!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:var(--panel-glass-solid)!important;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   border:1px solid var(--panel-border);
-  color:var(--text-muted);cursor:pointer;z-index:500;
-  transition:background .25s ease,color .25s ease,border-color .25s ease,transform .15s ease;
+  border-radius:50%!important;
+  color:var(--text-muted);cursor:pointer;z-index:1000!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .15s ease;
 }
-.settings-btn:hover{background:rgba(255,255,255,.08);color:var(--nebula-rose);border-color:var(--nebula-rose)}
+.settings-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary);border-color:rgba(255,255,255,.16)}
 .settings-btn:active{transform:scale(.94)}
 .settings-btn:focus-visible{outline:2px solid var(--stellar-gold);outline-offset:2px}
 .settings-btn svg{width:18px;height:18px}
 .settings-panel{
-  position:fixed;
-  top:calc(max(14px,env(safe-area-inset-top)) + 54px);
-  right:max(14px,5vw);
+  position:fixed!important;
+  top:calc(max(14px,env(safe-area-inset-top)) + 54px)!important;
+  right:max(14px,env(safe-area-inset-right))!important;
   width:min(280px,calc(100vw - 28px));
   background:var(--panel-glass-solid);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid var(--panel-border);border-radius:var(--radius-md);
-  box-shadow:var(--shadow-soft);padding:18px;z-index:510;
+  box-shadow:var(--shadow-soft);padding:18px;z-index:1010!important;
   opacity:0;pointer-events:none;transform:translateY(-8px);
   transition:opacity .25s ease,transform .25s ease
 }
@@ -93,19 +96,9 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
 .game-nav-btn.random-btn{color:var(--stellar-gold)}
 .game-nav-btn.random-btn:hover{background:rgba(240,194,110,.14);color:var(--stellar-gold)}
 @media(max-width:991px){
-  .settings-btn{top:max(10px,env(safe-area-inset-top));right:max(10px,4vw);width:42px;height:42px}
-  .settings-panel{
-    top:calc(max(10px,env(safe-area-inset-top)) + 50px);
-    right:max(10px,4vw);
-    width:min(280px,calc(100vw - 20px))
-  }
-  .game-nav{
-    bottom:max(8px,env(safe-area-inset-bottom));
-    max-width:calc(100vw - 20px);
-    padding:5px;
-    gap:3px;
-    border-radius:18px;
-  }
+  .settings-btn{top:max(10px,env(safe-area-inset-top))!important;right:max(10px,env(safe-area-inset-right))!important;width:42px!important;height:42px!important}
+  .settings-panel{top:calc(max(10px,env(safe-area-inset-top)) + 50px)!important;right:max(10px,env(safe-area-inset-right))!important;width:min(280px,calc(100vw - 20px))}
+  .game-nav{bottom:max(8px,env(safe-area-inset-bottom));max-width:calc(100vw - 20px);padding:5px;gap:3px;border-radius:18px}
   .game-nav-btn{flex-basis:42px;width:42px;height:42px;border-radius:13px}
   .game-nav-btn svg{width:17px;height:17px}
 }
