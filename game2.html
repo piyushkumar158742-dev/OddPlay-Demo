@@ -6,6 +6,7 @@
 <title>Block Market — Voxel Exchange</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.4/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -242,6 +243,10 @@ input[type="text"]::placeholder { color: #4b5563; }
     <div id="receipt-list" class="p-6 sm:p-8 overflow-y-auto flex-1 space-y-3 font-medium text-gray-300 text-sm sm:text-base"></div>
     
     <div class="p-6 sm:p-8 border-t border-[#1f1f1f] bg-[#050505] rounded-b-3xl shrink-0">
+      <div id="receipt-qrcode-wrap" class="flex flex-col items-center justify-center mb-6">
+        <img id="receipt-qrcode" alt="QR code to visit OddPlay" class="w-28 h-28 rounded-xl bg-white p-2" style="display:none;">
+        <span class="mt-2 text-[10px] uppercase tracking-widest text-gray-500">Scan to visit OddPlay</span>
+      </div>
       <div class="flex flex-col items-center justify-center bg-[#0a0a0c] border border-[#1e1e22] rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
         <span class="text-sm text-gray-500 uppercase tracking-widest mb-1">Total Due</span>
         <span class="text-2xl sm:text-4xl font-black text-white price-font text-center break-all leading-tight w-full" id="receipt-total">$0</span>
@@ -630,6 +635,23 @@ function closeReceipt() {
   setTimeout(()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
 }
 
+function getWebsiteUrl() {
+  try { return new URL('./', window.location.href).href; }
+  catch (e) { return window.location.origin + '/'; }
+}
+
+function getWebsiteQrDataUrl(size) {
+  size = size || 180;
+  if (!window.QRCode || !QRCode.toDataURL) {
+    return Promise.reject(new Error('QR library did not load.'));
+  }
+  return QRCode.toDataURL(getWebsiteUrl(), {
+    width: size,
+    margin: 1,
+    color: { dark: '#111827', light: '#ffffff' }
+  });
+}
+
 function buildReceipt() {
   const list = document.getElementById('receipt-list');
   let html = '';
@@ -653,6 +675,17 @@ function buildReceipt() {
   const totalDueNumber = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(totalSpent);
   document.getElementById('receipt-total').innerText = totalSpent % 1 === 0 ? totalDueNumber.replace('.00', '') : totalDueNumber;
 
+  const receiptQr = document.getElementById('receipt-qrcode');
+  if (receiptQr) {
+    receiptQr.style.display = 'none';
+    getWebsiteQrDataUrl(180).then(function(dataUrl) {
+      receiptQr.src = dataUrl;
+      receiptQr.style.display = 'block';
+    }).catch(function() {
+      receiptQr.removeAttribute('src');
+    });
+  }
+
   setTimeout(() => {
     inventory.forEach(item => {
       if(quantities[item.id] > 0) {
@@ -667,7 +700,8 @@ function buildReceipt() {
   }, 50);
 }
 
-function createReceiptElement() {
+async function createReceiptElement() {
+  const qrDataUrl = await getWebsiteQrDataUrl(180);
   const now = new Date();
   const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
   const receiptId = 'BM-' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
@@ -749,6 +783,10 @@ function createReceiptElement() {
         <div>Thank you for shopping!</div>
         <div style="color:#9ca3af; font-size:9px; margin-top:6px;">All sales are final.<br/>No refunds on blocks or items.</div>
       </div>
+      <div style="margin-top:16px; text-align:center; page-break-inside:avoid;">
+        <img src="${qrDataUrl}" alt="QR Code" style="width:92px;height:92px;display:block;margin:0 auto;padding:4px;background:#fff;" />
+        <div style="font-size:8px;color:#6b7280;margin-top:5px;letter-spacing:1px;text-transform:uppercase;">Scan to visit OddPlay</div>
+      </div>
       <div style="margin-top:16px; display:flex; justify-content:center; gap:1px;">
         ${barcodeHtml}
       </div>
@@ -805,9 +843,16 @@ function shareOnX() {
   window.open(intentUrl, '_blank');
 }
 
-function downloadPDF() {
+async function downloadPDF() {
   const jsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
   if (!jsPDF) { alert('PDF library did not load. Please refresh and try again.'); return; }
+
+  let qrDataUrl = null;
+  try {
+    qrDataUrl = await getWebsiteQrDataUrl(240);
+  } catch (e) {
+    // Keep PDF generation working even if the QR library is unavailable.
+  }
 
   const now = new Date();
   const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
@@ -903,6 +948,15 @@ function downloadPDF() {
   y += 0.13;
   pdf.setFontSize(6.5); pdf.setTextColor(150);
   pdf.text('All sales are final. No refunds on blocks or items.', pageW / 2, y, { align: 'center' });
+  y += 0.14;
+
+  if (qrDataUrl) {
+    checkPageBreak(1.18);
+    pdf.addImage(qrDataUrl, 'PNG', (pageW - 0.88) / 2, y, 0.88, 0.88);
+    y += 0.98;
+    pdf.setFontSize(6.5); pdf.setTextColor(120);
+    pdf.text('SCAN TO VISIT ODDPLAY', pageW / 2, y, { align: 'center' });
+  }
 
   pdf.save('BlockMarket_Receipt.pdf');
 }
@@ -916,6 +970,6 @@ fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
   // Initialize the shop after all game functions are defined.
   renderGrid();
 </script>
-<script src="shared.js?v=20260922"></script>
+<script src="shared.js?v=20260923"></script>
 </body>
 </html>
