@@ -93,8 +93,8 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
 .game-nav-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}
 .game-nav-btn:active{transform:scale(.94)}
 .game-nav-btn:focus-visible{outline:2px solid var(--stellar-gold);outline-offset:2px}
-.game-nav-btn.random-btn{color:var(--stellar-gold)}
-.game-nav-btn.random-btn:hover{background:rgba(240,194,110,.14);color:var(--stellar-gold)}
+.game-nav-btn.random-btn{color:var(--text-muted)}
+.game-nav-btn.random-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}
 .game-nav-toggle{display:none;}
 @media(max-width:991px){
   .settings-btn{top:max(10px,env(safe-area-inset-top))!important;right:max(10px,env(safe-area-inset-right))!important;width:42px!important;height:42px!important}
@@ -131,7 +131,7 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
     opacity:1!important;transform:translateY(0) scale(1)!important;pointer-events:auto!important;
   }
   .game-nav.mobile-expanded .game-nav-toggle{
-    color:var(--stellar-gold)!important;transform:rotate(45deg);
+    color:var(--text-primary)!important;transform:rotate(45deg);
   }
   .game-nav-btn svg{width:18px!important;height:18px!important}
   body[data-game-index="0"]{padding-bottom:88px!important}
