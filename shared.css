@@ -92,7 +92,7 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
 .game-nav-btn svg{width:18px;height:18px;pointer-events:none}
 .game-nav-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}
 .game-nav-btn:active{transform:scale(.94)}
-.game-nav-btn:focus-visible{outline:2px solid var(--stellar-gold);outline-offset:2px}
+.game-nav-btn:focus-visible{outline:2px solid var(--text-primary);outline-offset:2px}
 .game-nav-btn.random-btn{color:var(--text-muted)}
 .game-nav-btn.random-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}
 .game-nav-toggle{display:none;}
@@ -134,6 +134,16 @@ html.no-motion .bg-orbit-wrap{animation:none}@keyframes orbitSpin{to{transform:t
     color:var(--text-primary)!important;transform:rotate(45deg);
   }
   .game-nav-btn svg{width:18px!important;height:18px!important}
+  .game-nav-btn,.game-nav-btn.random-btn,.game-nav-btn:focus,.game-nav-btn:focus-visible,.game-nav-btn:active{
+    color:var(--text-muted)!important;
+    outline:none!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  .game-nav-toggle,.game-nav-toggle:focus,.game-nav-toggle:focus-visible,.game-nav-toggle:active{
+    color:var(--text-primary)!important;
+    outline:none!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
   body[data-game-index="0"]{padding-bottom:88px!important}
 }
 @media(prefers-reduced-motion:reduce){
@@ -149,9 +159,6 @@ body[data-game-index="0"] header .eyebrow,body[data-game-index="2"] header .eyeb
 
 @media (max-width:991px){
   body{padding-left:0;padding-right:0;gap:14px}
-  .game-nav{left:50%;right:auto;bottom:max(8px,env(safe-area-inset-bottom));transform:translateX(-50%);width:auto;height:auto;min-width:0;padding:5px;background:var(--panel-glass-solid);border:1px solid var(--panel-border);box-shadow:var(--shadow-soft);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);cursor:default;}
-  .game-nav::before{display:none!important;content:none!important}
-  .game-nav-btn,.game-nav.mobile-expanded .game-nav-btn{position:static;width:42px;height:42px;min-width:42px;opacity:1;transform:none;pointer-events:auto;display:flex;align-items:center;justify-content:center;border-radius:13px;background:transparent;border:0;}
 }
 @media(prefers-reduced-motion:reduce){
   .settings-btn,.settings-panel,.game-nav-btn{transition:none}
